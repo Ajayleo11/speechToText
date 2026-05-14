@@ -245,3 +245,128 @@ textarea::placeholder {
   padding-top: 0.9rem;
   border-top: 1px solid var(--border);
 }
+
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.28rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all 0.25s;
+}
+.status-pill.status-listening {
+  border-color: rgba(163,230,53,0.35);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.status-pill.status-connecting {
+  border-color: rgba(251,191,36,0.35);
+  color: #fbbf24;
+  background: rgba(251,191,36,0.08);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.status-pill.status-listening .status-dot {
+  animation: blink 1s step-end infinite;
+}
+
+.error-msg {
+  font-size: 0.7rem;
+  color: var(--rec);
+  letter-spacing: 0.04em;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.char-count {
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-right: 0.25rem;
+}
+
+.action-btn {
+  padding: 0.32rem 0.85rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.action-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text);
+}
+.action-btn.accent {
+  border-color: rgba(163,230,53,0.3);
+  color: var(--accent);
+}
+.action-btn.accent:hover {
+  background: var(--accent-dim);
+}
+
+
+
+.interim-overlay {
+  position: absolute;
+  bottom: 0.9rem;
+  left: 1rem;
+  right: 1rem;
+  color: rgba(163,230,53,0.5);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.75;
+  pointer-events: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-style: italic;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+
+.page-footer {
+  text-align: center;
+  font-size: 0.67rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  padding-top: 0.5rem;
+}
+
+@media (max-width: 520px) {
+  .settings-grid { grid-template-columns: 1fr; }
+  .settings-grid .field:last-child { grid-column: 1; }
+  .card-footer { flex-direction: column; align-items: flex-start; }
+}
