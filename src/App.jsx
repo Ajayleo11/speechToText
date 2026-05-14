@@ -17,6 +17,8 @@ const [interim, setInterim] = useState('')
 const [status, setStatus] = useState('idle');
 const [error, setError] = useState('');
 const [copied, setCopied] = useState(false);
+const [useSDK, setUseSDK] = useState(false)
+
 
 
 
@@ -91,6 +93,28 @@ const handleCopy = () => {
   })
 }
 
+
+const handleSave = () => {
+  const data = {
+    description: text,
+    savedAt: new Date().toISOString(),
+    mode: useSDK ? 'AWS SDK' : 'Raw WebSocket',
+  }
+  console.log('Saved', data)
+
+  // download as a .json file
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: 'application/json'
+  })
+  const url = URL.createObjectURL(blob)
+  const a   = document.createElement('a')
+  a.href     = url
+  a.download = `voicescript-${Date.now()}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+
   return (
     <div className="layout">
       <header className="header">
@@ -132,58 +156,84 @@ const handleCopy = () => {
   </div>
 )}
       <main className="card">
-        <div className="waveform-row">
-  <Waveform active={isRecording} />
-</div>
-        <div className="card-topbar">
-          <div className="textarea-wrap">
-        <div className="card-footer">
-  <div className="status-row">
-    <span className={`status-pill status-${status}`}>
-      <span className="status-dot" />
-      {{ idle: 'Ready', connecting: 'Connecting…', listening: 'Listening' }[status]}
-    </span>
-    {error && <span className="error-msg">{error}</span>}
-  </div>
-  <div className="actions">
-    <span className="char-count">{text.length} chars</span>
+  {/* Toggle at the very top */}
+  <div className="toggle-row">
+    <span className="toggle-label">Raw WebSocket</span>
     <button
-      className="action-btn"
-      onClick={() => { setText(''); setInterim('') }}
+      className={`toggle-btn ${useSDK ? 'sdk' : 'ws'}`}
+      onClick={() => setUseSDK(o => !o)}
     >
-      Clear
+      <span className="toggle-thumb" />
     </button>
-    <button className="action-btn accent" onClick={handleCopy}>
-      {copied ? 'Copied' : 'Copy'}
+    <span className="toggle-label">AWS SDK</span>
+    <span className={`toggle-badge ${useSDK ? 'sdk' : 'ws'}`}>
+      {useSDK ? 'AWS SDK' : 'Raw WebSocket'}
+    </span>
+  </div>
+
+  {/* Description label inline with textarea */}
+  <div className="card-topbar">
+    <button
+      className={`record-btn ${isRecording ? 'recording' : ''}`}
+      onClick={handleRecord}
+    >
+      <span className={`rec-dot ${isRecording ? 'pulse' : ''}`} />
+      {isRecording ? 'Stop Recording' : 'Start Recording'}
     </button>
   </div>
-</div>
-  <textarea
-  ref={textareaRef}
-  value={text}
-  onChange={handleTextChange}
-    placeholder="Click 'Start Recording' to transcribe speech, or type directly…"
-    rows={10}
-  />
 
-
-  {interim && (
-  <div className="interim-overlay" aria-live="polite">
-    {interim}
+  <div className="waveform-row">
+    <Waveform active={isRecording} />
   </div>
-)}
 
-</div>
-          <span className="field-label">Description</span>
-          <button
-            className={`record-btn ${isRecording ? 'recording' : ''}`}
-            onClick={handleRecord}
-          >
-            <span className={`rec-dot ${isRecording ? 'pulse' : ''}`} />
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </button>
-        </div>
-      </main>
+  <div className="textarea-wrap">
+    <div className="textarea-label-row">
+      <span className="field-label">Description</span>
+    </div>
+    <textarea
+      ref={textareaRef}
+      className={interim ? 'has-interim' : ''}
+      value={text}
+      onChange={handleTextChange}
+      placeholder="Click 'Start Recording' to transcribe speech, or type directly…"
+      rows={10}
+    />
+    {interim && (
+      <div className="interim-overlay" aria-live="polite">
+        {interim}▋
+      </div>
+    )}
+  </div>
+
+  <div className="card-footer">
+    <div className="status-row">
+      <span className={`status-pill status-${status}`}>
+        <span className="status-dot" />
+        {{ idle: 'Ready', connecting: 'Connecting…', listening: 'Listening' }[status]}
+      </span>
+      {error && <span className="error-msg">{error}</span>}
+    </div>
+    <div className="actions">
+      <span className="char-count">{text.length} chars</span>
+      <button
+        className="action-btn"
+        onClick={() => { setText(''); setInterim('') }}
+      >
+        Clear
+      </button>
+      <button className="action-btn accent" onClick={handleCopy}>
+        {copied ? 'Copied' : 'Copy'}
+      </button>
+    </div>
+  </div>
+
+  {/* Save button at the bottom */}
+  <div className="save-row">
+    <button className="save-btn" onClick={handleSave}>
+      Save
+    </button>
+  </div>
+</main>
       <footer className="page-footer">
   Profanity masking · Amazon Transcribe Streaming
 </footer>
