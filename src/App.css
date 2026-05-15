@@ -479,3 +479,13 @@ textarea::placeholder {
 .save-btn:active {
   transform: scale(0.97);
 }
+
+.mode-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  margin-left: 0.35rem;
+  background: rgba(255,255,255,0.07);
+  color: var(--muted);
+}

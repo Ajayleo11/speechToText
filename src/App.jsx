@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { maskWords } from './Utils/badWords';
 import './App.css';
 import Waveform from './waveform';
+import { useTranscribeSDK } from './hooks/useTranscribeSDK';
 import { useTranscribe } from './hooks/useTranscribe';
 
 
@@ -69,9 +70,17 @@ const onStatusChange = useCallback((s) => {
   if (s === 'idle') setIsRecording(false)
 }, [])
 
-const { start, stop } = useTranscribe({
+
+const wsHook  = useTranscribe({
   onPartial, onFinal, onError, onStatusChange
 })
+const sdkHook = useTranscribeSDK({
+  onPartial, onFinal, onError, onStatusChange
+})
+
+
+// pick the active hook based on toggle
+const { start, stop } = useSDK ? sdkHook : wsHook
 
 
 const handleRecord = () => {
@@ -113,7 +122,7 @@ const handleSave = () => {
   a.click()
   URL.revokeObjectURL(url)
 }
-
+console.log(region, "region", 'error', error)
 
   return (
     <div className="layout">
@@ -125,7 +134,7 @@ const handleSave = () => {
   Settings
 </button>
         <div className="logo">
-          <span className="logo-mark">VS</span>
+          <span className="logo-mark">ST</span>
           <div>
             <h1>Speech to Text</h1>
             <p className="tagline">speech to text · privacy first</p>
@@ -210,6 +219,7 @@ const handleSave = () => {
       <span className={`status-pill status-${status}`}>
         <span className="status-dot" />
         {{ idle: 'Ready', connecting: 'Connecting…', listening: 'Listening' }[status]}
+          <span className="mode-tag">{useSDK ? 'SDK' : 'WS'}</span>
       </span>
       {error && <span className="error-msg">{error}</span>}
     </div>
