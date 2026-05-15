@@ -150,18 +150,17 @@ console.log(region, "region", 'error', error)
       </label>
       <label className="field">
         <span className="field-label">Access Key ID</span>
-        <input value={accessKeyId} onChange={e => setAccessKeyId(e.target.value)} placeholder="AKIAIOSFODNN7EXAMPLE" />
+        <input value={accessKeyId} onChange={e => setAccessKeyId(e.target.value)} placeholder="Enter access key" />
       </label>
       <label className="field">
         <span className="field-label">Secret Access Key</span>
-        <input type="password" value={secretAccessKey} onChange={e => setSecretAccessKey(e.target.value)} placeholder="••••••••••••••••" />
+        <input type="password" value={secretAccessKey} onChange={e => setSecretAccessKey(e.target.value)} placeholder="Enter secret access key" />
       </label>
       <label className="field">
         <span className="field-label">Extra words to mask (comma-separated)</span>
         <input value={customWords} onChange={e => setCustomWords(e.target.value)} placeholder="badword, anotherword" />
       </label>
     </div>
-    <p className="settings-note">Credentials stay client-side only. For production use IAM roles or Cognito.</p>
   </div>
 )}
       <main className="card">
